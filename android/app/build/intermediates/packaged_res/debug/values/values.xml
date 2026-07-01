@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#070B14</color>
+    <color name="seed">#06B6D4</color>
+    <string name="app_name">GlucoCheck AI</string>
+    <string name="disclaimer">For informational purposes only. Not a substitute for medical advice.</string>
+    <string name="prediction_diabetic">Diabetic Risk Detected</string>
+    <string name="prediction_healthy">No Diabetes Risk</string>
+    <style name="Theme.DiabetesPrediction" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/ic_launcher_background</item>
+    </style>
+</resources>

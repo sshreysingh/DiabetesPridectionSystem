@@ -24,7 +24,7 @@ android {
         // Emulator:        http://10.0.2.2:5000/
         // Physical device: http://192.168.x.x:5000/
         // Cloud (Render):  https://your-app.onrender.com/
-        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:5000/\"")
+        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:5001/\"")
     }
 
     buildTypes {
@@ -34,7 +34,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:5000/\"")
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:5001/\"")
         }
     }
 

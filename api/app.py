@@ -98,7 +98,7 @@ def predict():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
     print(f"🚀 Starting Diabetes Prediction API on port {port}")
     print(f"📱 For Android Emulator: use http://10.0.2.2:{port}/")
     print(f"📱 For Physical Device: use http://<your-local-ip>:{port}/")
