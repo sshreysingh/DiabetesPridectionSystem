@@ -1,7 +1,6 @@
 package com.diabetes.prediction.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -15,14 +14,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.diabetes.prediction.ui.theme.*
 import com.diabetes.prediction.viewmodel.PredictionUiState
 import com.diabetes.prediction.viewmodel.PredictionViewModel
 
@@ -45,16 +42,16 @@ fun InputFormScreen(
     if (uiState is PredictionUiState.Error) {
         AlertDialog(
             onDismissRequest = { viewModel.dismissError() },
-            containerColor   = Navy700,
+            containerColor   = MaterialTheme.colorScheme.surface,
             title = {
-                Text("Error", color = Red400, fontWeight = FontWeight.Bold)
+                Text("Validation Error", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
             },
             text = {
-                Text((uiState as PredictionUiState.Error).message, color = TextSecondary)
+                Text((uiState as PredictionUiState.Error).message, color = MaterialTheme.colorScheme.onSurfaceVariant)
             },
             confirmButton = {
                 TextButton(onClick = { viewModel.dismissError() }) {
-                    Text("OK", color = Teal400)
+                    Text("OK", color = MaterialTheme.colorScheme.primary)
                 }
             }
         )
@@ -63,7 +60,7 @@ fun InputFormScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(DeepNavy, Navy900)))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -79,16 +76,16 @@ fun InputFormScreen(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .size(44.dp)
-                        .background(Navy700, CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
                 ) {
-                    Icon(Icons.Filled.ArrowBack, "Back", tint = TextPrimary)
+                    Icon(Icons.Filled.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onBackground)
                 }
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Health Analysis", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
-                    Text("Enter your medical data", fontSize = 12.sp, color = TextSecondary)
+                    Text("Clinical Data", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                    Text("Enter patient metrics", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
 
@@ -109,7 +106,7 @@ fun InputFormScreen(
                     value        = formState.pregnancies,
                     onValueChange = viewModel::updatePregnancies,
                     label        = "Pregnancies",
-                    hint         = "Number of times pregnant (0 – 17)",
+                    hint         = "Number of times pregnant (0 – 20)",
                     icon         = Icons.Outlined.Person,
                     keyboardType = KeyboardType.Number,
                     unit         = "times"
@@ -118,7 +115,7 @@ fun InputFormScreen(
                     value        = formState.age,
                     onValueChange = viewModel::updateAge,
                     label        = "Age",
-                    hint         = "Your age in years (21 – 81)",
+                    hint         = "Patient age in years (1 – 120)",
                     icon         = Icons.Outlined.DateRange,
                     keyboardType = KeyboardType.Number,
                     unit         = "yrs"
@@ -133,7 +130,7 @@ fun InputFormScreen(
                     value        = formState.glucose,
                     onValueChange = viewModel::updateGlucose,
                     label        = "Glucose",
-                    hint         = "Plasma glucose concentration (0 – 200 mg/dL)",
+                    hint         = "Plasma glucose concentration (40 – 300 mg/dL)",
                     icon         = Icons.Outlined.Opacity,
                     keyboardType = KeyboardType.Number,
                     unit         = "mg/dL"
@@ -142,7 +139,7 @@ fun InputFormScreen(
                     value        = formState.bloodPressure,
                     onValueChange = viewModel::updateBloodPressure,
                     label        = "Blood Pressure",
-                    hint         = "Diastolic blood pressure (0 – 122 mm Hg)",
+                    hint         = "Diastolic blood pressure (40 – 200 mm Hg)",
                     icon         = Icons.Outlined.Favorite,
                     keyboardType = KeyboardType.Number,
                     unit         = "mm Hg"
@@ -151,7 +148,7 @@ fun InputFormScreen(
                     value        = formState.insulin,
                     onValueChange = viewModel::updateInsulin,
                     label        = "Insulin",
-                    hint         = "2-Hour serum insulin (0 – 846 μU/mL)",
+                    hint         = "2-Hour serum insulin (0 – 900 μU/mL)",
                     icon         = Icons.Outlined.Science,
                     keyboardType = KeyboardType.Number,
                     unit         = "μU/mL"
@@ -166,7 +163,7 @@ fun InputFormScreen(
                     value        = formState.skinThickness,
                     onValueChange = viewModel::updateSkinThickness,
                     label        = "Skin Thickness",
-                    hint         = "Triceps skin fold thickness (0 – 99 mm)",
+                    hint         = "Triceps skin fold thickness (0 – 100 mm)",
                     icon         = Icons.Outlined.ShowChart,
                     keyboardType = KeyboardType.Number,
                     unit         = "mm"
@@ -175,7 +172,7 @@ fun InputFormScreen(
                     value        = formState.bmi,
                     onValueChange = viewModel::updateBmi,
                     label        = "BMI",
-                    hint         = "Body Mass Index (0 – 67.1 kg/m²)",
+                    hint         = "Body Mass Index (10 – 70 kg/m²)",
                     icon         = Icons.Outlined.FitnessCenter,
                     keyboardType = KeyboardType.Decimal,
                     unit         = "kg/m²"
@@ -184,7 +181,7 @@ fun InputFormScreen(
                     value        = formState.diabetesPedigreeFunction,
                     onValueChange = viewModel::updateDiabetesPedigreeFunction,
                     label        = "Diabetes Pedigree Function",
-                    hint         = "Genetic diabetes risk score (0.078 – 2.42)",
+                    hint         = "Genetic diabetes risk score (0.05 – 2.5)",
                     icon         = Icons.Outlined.AccountTree,
                     keyboardType = KeyboardType.Decimal,
                     unit         = "score"
@@ -198,46 +195,31 @@ fun InputFormScreen(
                 Button(
                     onClick        = { viewModel.predict() },
                     enabled        = !isLoading,
-                    modifier       = Modifier.fillMaxWidth().height(60.dp),
-                    shape          = RoundedCornerShape(16.dp),
+                    modifier       = Modifier.fillMaxWidth().height(58.dp),
+                    shape          = RoundedCornerShape(12.dp),
                     colors         = ButtonDefaults.buttonColors(
-                        containerColor        = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
-                    ),
-                    contentPadding = PaddingValues(0.dp)
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                if (!isLoading)
-                                    Brush.horizontalGradient(listOf(Teal500, Purple500))
-                                else
-                                    Brush.horizontalGradient(listOf(Navy600, Navy700)),
-                                RoundedCornerShape(16.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (isLoading) {
-                            Row(
-                                verticalAlignment    = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                CircularProgressIndicator(
-                                    modifier    = Modifier.size(22.dp),
-                                    color       = Teal400,
-                                    strokeWidth = 2.5.dp
-                                )
-                                Text("Analyzing...", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = TextSecondary)
-                            }
-                        } else {
-                            Row(
-                                verticalAlignment    = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Icon(Icons.Filled.Analytics, null, tint = Color.White, modifier = Modifier.size(22.dp))
-                                Text("Analyze & Predict", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                            }
+                    if (isLoading) {
+                        Row(
+                            verticalAlignment    = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            CircularProgressIndicator(
+                                modifier    = Modifier.size(22.dp),
+                                color       = Color.White,
+                                strokeWidth = 2.5.dp
+                            )
+                            Text("Analyzing...", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        }
+                    } else {
+                        Row(
+                            verticalAlignment    = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(Icons.Filled.Analytics, null, tint = Color.White, modifier = Modifier.size(22.dp))
+                            Text("Run Assessment", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
                         }
                     }
                 }
@@ -254,12 +236,12 @@ private fun SectionLabel(title: String) {
         verticalAlignment    = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Box(modifier = Modifier.size(4.dp).background(Teal500, CircleShape))
+        Box(modifier = Modifier.size(4.dp).background(MaterialTheme.colorScheme.primary, CircleShape))
         Text(
             text          = title.uppercase(),
-            fontSize      = 11.sp,
+            fontSize      = 12.sp,
             fontWeight    = FontWeight.Bold,
-            color         = Teal400,
+            color         = MaterialTheme.colorScheme.primary,
             letterSpacing = 1.5.sp
         )
     }
@@ -278,40 +260,34 @@ private fun DiabetesTextField(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         OutlinedTextField(
-    value         = value,
-    onValueChange = { input ->
-        // Allow only digits and a single decimal point — blocks
-        // letters/symbols from ever reaching the form state.
-        val filtered = if (keyboardType == KeyboardType.Decimal) {
-            input.filterIndexed { index, c ->
-                c.isDigit() || (c == '.' && input.indexOf('.') == index)
-            }
-        } else {
-            input.filter { it.isDigit() }
-        }
-        onValueChange(filtered)
-    },
-            placeholder   = { Text("0", color = TextHint) },
-            leadingIcon   = { Icon(icon, contentDescription = null, tint = Teal400) },
+            value         = value,
+            onValueChange = { input ->
+                // Allow only digits and a single decimal point — blocks
+                // letters/symbols from ever reaching the form state.
+                val filtered = if (keyboardType == KeyboardType.Decimal) {
+                    input.filterIndexed { index, c ->
+                        c.isDigit() || (c == '.' && input.indexOf('.') == index)
+                    }
+                } else {
+                    input.filter { it.isDigit() }
+                }
+                onValueChange(filtered)
+            },
+            label         = { Text(label) },
+            placeholder   = { Text("0", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)) },
+            leadingIcon   = { Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             suffix        = if (unit.isNotEmpty()) {
-                { Text(unit, color = TextHint, fontSize = 12.sp) }
+                { Text(unit, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp) }
             } else null,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             modifier      = Modifier.fillMaxWidth(),
-            shape         = RoundedCornerShape(14.dp),
+            shape         = RoundedCornerShape(12.dp),
             colors        = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor     = Teal500,
-                unfocusedBorderColor   = CardBorder,
-                focusedLabelColor      = Teal400,
-                unfocusedLabelColor    = TextSecondary,
-                cursorColor            = Teal400,
-                focusedTextColor       = TextPrimary,
-                unfocusedTextColor     = TextPrimary,
-                focusedContainerColor  = Navy700,
-                unfocusedContainerColor = Navy700
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
             ),
             singleLine = true
         )
-        Text(hint, fontSize = 11.sp, color = TextHint, modifier = Modifier.padding(start = 4.dp))
+        Text(hint, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 4.dp))
     }
 }

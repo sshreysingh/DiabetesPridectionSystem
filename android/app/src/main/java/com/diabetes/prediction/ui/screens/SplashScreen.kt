@@ -13,18 +13,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.diabetes.prediction.ui.theme.*
 import kotlinx.coroutines.delay
 
 @Composable
@@ -53,34 +52,18 @@ fun SplashScreen(onSplashComplete: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(listOf(DeepNavy, Color(0xFF0D1B2A), Navy900))
-            ),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
-        // Ambient glow behind icon
-        Box(
-            modifier = Modifier
-                .size(320.dp)
-                .scale(scale)
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(Teal500.copy(alpha = 0.14f), Color.Transparent)
-                    ),
-                    shape = CircleShape
-                )
-        )
-
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-            // App icon
+            // App icon - Solid Medical Blue
             Box(
                 modifier = Modifier
                     .scale(scale)
                     .size(104.dp)
                     .background(
-                        Brush.linearGradient(listOf(Teal500, Purple500)),
-                        CircleShape
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -103,17 +86,17 @@ fun SplashScreen(onSplashComplete: () -> Unit) {
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text       = "GlucoCheck AI",
+                        text       = "GlucoCheck",
                         fontSize   = 34.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color      = TextPrimary
+                        color      = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text          = "SMART DIABETES PREDICTION",
+                        text          = "CLINICAL RISK ASSESSMENT",
                         fontSize      = 11.sp,
-                        fontWeight    = FontWeight.Medium,
-                        color         = Teal400,
+                        fontWeight    = FontWeight.SemiBold,
+                        color         = MaterialTheme.colorScheme.primary,
                         letterSpacing = 2.sp
                     )
                 }
@@ -131,7 +114,7 @@ fun SplashScreen(onSplashComplete: () -> Unit) {
             Text(
                 text      = "Powered by Machine Learning",
                 fontSize  = 12.sp,
-                color     = TextHint,
+                color     = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
         }
