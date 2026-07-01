@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GlucoCheck AI</string>
+    <string name="prediction_diabetic">Diabetic Risk Detected</string>
+    <string name="prediction_healthy">No Diabetes Risk</string>
+    <string name="disclaimer">For informational purposes only. Not a substitute for medical advice.</string>
+</resources>
