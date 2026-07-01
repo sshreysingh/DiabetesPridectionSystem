@@ -66,46 +66,104 @@ class PredictionViewModel(application: Application) : AndroidViewModel(applicati
     fun updateDiabetesPedigreeFunction(v: String) { _formState.update { it.copy(diabetesPedigreeFunction = v) } }
     fun updateAge(v: String) { _formState.update { it.copy(age = v) } }
 
-    // ── Actions ───────────────────────────────────────────────────────────
+    // ── Validation ────────────────────────────────────────────────────────
 
-    fun predict() {
-        val form = _formState.value
-        val request = try {
-            PredictionRequest(
-                pregnancies = form.pregnancies.toFloat(),
-                glucose = form.glucose.toFloat(),
-                bloodPressure = form.bloodPressure.toFloat(),
-                skinThickness = form.skinThickness.toFloat(),
-                insulin = form.insulin.toFloat(),
-                bmi = form.bmi.toFloat(),
-                diabetesPedigreeFunction = form.diabetesPedigreeFunction.toFloat(),
-                age = form.age.toFloat()
-            )
-        } catch (e: NumberFormatException) {
-            _uiState.value = PredictionUiState.Error(
-                "Please fill in all fields with valid numbers before predicting."
-            )
-            return
+private data class Range(val min: Double, val max: Double, val unit: String)
+
+private val FIELD_RANGES = mapOf(
+    "Pregnancies" to Range(0.0, 20.0, "times"),
+    "Glucose" to Range(40.0, 300.0, "mg/dL"),
+    "Blood Pressure" to Range(40.0, 200.0, "mm Hg"),
+    "Skin Thickness" to Range(0.0, 100.0, "mm"),
+    "Insulin" to Range(0.0, 900.0, "µU/mL"),
+    "BMI" to Range(10.0, 70.0, "kg/m²"),
+    "Diabetes Pedigree Function" to Range(0.05, 2.5, "score"),
+    "Age" to Range(1.0, 120.0, "years")
+)
+
+private fun validate(form: DiabetesFormState): List<String> {
+    val errors = mutableListOf<String>()
+
+    val fields = listOf(
+        "Pregnancies" to form.pregnancies,
+        "Glucose" to form.glucose,
+        "Blood Pressure" to form.bloodPressure,
+        "Skin Thickness" to form.skinThickness,
+        "Insulin" to form.insulin,
+        "BMI" to form.bmi,
+        "Diabetes Pedigree Function" to form.diabetesPedigreeFunction,
+        "Age" to form.age
+    )
+
+    for ((label, rawValue) in fields) {
+        val value = rawValue.toDoubleOrNull()
+        if (value == null) {
+            errors.add("$label must be a valid number")
+            continue
         }
-
-        viewModelScope.launch {
-            _uiState.value = PredictionUiState.Loading
-            try {
-                val response = repository.predict(request)
-                repository.saveToHistory(request, response)
-                _uiState.value = PredictionUiState.Success(response)
-            } catch (e: Exception) {
-                _uiState.value = PredictionUiState.Error(
-                    buildString {
-                        append("Could not reach the prediction server.\n\n")
-                        append("Make sure the Flask API is running.\n")
-                        append("Details: ${e.localizedMessage}")
-                    }
-                )
-            }
+        val range = FIELD_RANGES[label] ?: continue
+        if (value < range.min || value > range.max) {
+            errors.add(
+                "$label ($value) is outside the plausible range " +
+                    "(${range.min}–${range.max} ${range.unit})"
+            )
         }
     }
 
+    return errors
+}
+
+// ── Actions ───────────────────────────────────────────────────────────
+
+fun predict() {
+    val form = _formState.value
+
+    val validationErrors = validate(form)
+    if (validationErrors.isNotEmpty()) {
+        _uiState.value = PredictionUiState.Error(
+            buildString {
+                append("Please fix the following before predicting:\n\n")
+                append(validationErrors.joinToString("\n") { "• $it" })
+            }
+        )
+        return
+    }
+
+    val request = try {
+        PredictionRequest(
+            pregnancies = form.pregnancies.toFloat(),
+            glucose = form.glucose.toFloat(),
+            bloodPressure = form.bloodPressure.toFloat(),
+            skinThickness = form.skinThickness.toFloat(),
+            insulin = form.insulin.toFloat(),
+            bmi = form.bmi.toFloat(),
+            diabetesPedigreeFunction = form.diabetesPedigreeFunction.toFloat(),
+            age = form.age.toFloat()
+        )
+    } catch (e: NumberFormatException) {
+        _uiState.value = PredictionUiState.Error(
+            "Please fill in all fields with valid numbers before predicting."
+        )
+        return
+    }
+
+    viewModelScope.launch {
+        _uiState.value = PredictionUiState.Loading
+        try {
+            val response = repository.predict(request)
+            repository.saveToHistory(request, response)
+            _uiState.value = PredictionUiState.Success(response)
+        } catch (e: Exception) {
+            _uiState.value = PredictionUiState.Error(
+                buildString {
+                    append("Could not reach the prediction server.\n\n")
+                    append("Make sure the Flask API is running.\n")
+                    append("Details: ${e.localizedMessage}")
+                }
+            )
+        }
+    }
+}
     fun resetForm() {
         _formState.value = DiabetesFormState()
         _uiState.value = PredictionUiState.Idle

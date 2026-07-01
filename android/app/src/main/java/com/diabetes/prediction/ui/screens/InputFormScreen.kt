@@ -278,9 +278,19 @@ private fun DiabetesTextField(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         OutlinedTextField(
-            value         = value,
-            onValueChange = onValueChange,
-            label         = { Text(label) },
+    value         = value,
+    onValueChange = { input ->
+        // Allow only digits and a single decimal point — blocks
+        // letters/symbols from ever reaching the form state.
+        val filtered = if (keyboardType == KeyboardType.Decimal) {
+            input.filterIndexed { index, c ->
+                c.isDigit() || (c == '.' && input.indexOf('.') == index)
+            }
+        } else {
+            input.filter { it.isDigit() }
+        }
+        onValueChange(filtered)
+    },
             placeholder   = { Text("0", color = TextHint) },
             leadingIcon   = { Icon(icon, contentDescription = null, tint = Teal400) },
             suffix        = if (unit.isNotEmpty()) {
